@@ -1,0 +1,21 @@
+
+The folowing changes have been made to this mail message - acording to your organization policy
+
+
+Removed Files - 1 Files has been removed : 
+File Name : dd.c.c.c.c - Reason : <FILE TYPE UNALLOWED>	[Deleted - c; ]
+
+
+Cleaned Files - 2 Files has been cleaned : 
+File name : BODY_2.txtbody - Reason : <CONVERTED TXTs-TO-ANY>	[OK]
+File name : BODY_3.htmlbody - Reason : <CONVERTED TXTs-TO-ANY>	[OK]
+
+
+Converted Files - 1 Files has been changed : 
+Original File : Makefile.doc - Reason :<CONVERTED DOC-TO-DOCX>	[OK]
+	  converted file name : Makefile.doc.docx
+
+
+Total changes to message : 4
+
+Default Profile

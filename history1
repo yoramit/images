@@ -1,0 +1,164 @@
+    1  pwd
+    2  cd linuxRpi
+    3  mkdir linuxRpi;cd linuxRpi
+    4  pwd
+    5  git clone https://github.com/raspberrypi/tools
+    6  ls
+    7  cd tools/
+    8  ls
+    9  ls arm-bcm2708/
+   10  pwd
+   11  cd ..
+   12  file tools/
+   13  ls -l
+   14  ls -a tools/
+   15  unzip ../Downloads/documentation-master.zip 
+   16  ls
+   17  cd documentation-master/
+   18  ls -l
+   19  cd ..
+   20  ls
+   21  ls tools/
+   22  ls -l tools/
+   23  file tools/sysidk 
+   24  gedit tools/sysidk 
+   25  ls -l tools/mkimage/ 
+   26  file tools/mkimage/imagetool-uncompressed.py 
+   27  file tools/mkimage/first32k.bin 
+   28  cd tools/
+   29  cd arm-bcm2708/
+   30  ls
+   31  dnf search *arm-rpi*
+   32  dnf list *arm-rpi*
+   33  dnf repoquery *arm-rpi*
+   34  dnf repolist *arm-rpi*
+   35  dnf list installed *arm-rpi*
+   36  dnf list installed
+   37  dnf list installed | less
+   38  ls
+   39  pwd
+   40  cd ../..
+   41  ls
+   42  unzip ~/Downloads/tools-master.zip 
+   43  ls
+   44  ifcfg 
+   45  ifstat 
+   46  ifconfig 
+   47  sudo systemctl start sshd
+   48  su -
+   49  sudo systemctl start sshd
+   50  su -
+   51  sudo systemctl start sshd
+   52  su -
+   53  sudo systemctl start sshd
+   54  dnf search linaro
+   55  dnf search linaro-arm
+   56  dnf search linaro
+   57  dnf search gcc-linaro
+   58  dnf search gcc-
+   59  dnf list *linux*
+   60  dnf search *linux* | less
+   61  dnf search *arm-linux* | less
+   62  dnf search *arm-* | less
+   63  dnf list *arm-* | less
+   64  dnf list *gnueabi* | less
+   65  dnf list *rpi* | less
+   66  dnf list *raspberry* | less
+   67  dnf search *rpi* | less
+   68  dnf list installed > ~/installedpacks
+   69  gedit ~/installedpacks 
+   70  dnf repoquery
+   71  dnf repolist
+   72  dnf list *raspb*
+   73  dnf list *bcm*
+   74  dnf list *bcm2*
+   75  dnf list *arm-bcm2*
+   76  sudo systemctl sshd start
+   77  nautilus
+   78  nautilus&
+   79  ls
+   80  ps
+   81  ls -l
+   82  ls
+   83  cd tools
+   84  git branch
+   85  git tag
+   86  git log
+   87  git log|less
+   88  echo $PATH
+   89  dnf list available *linaro*
+   90  cd ..
+   91  pwd
+   92  ls
+   93  mkdir linux4.11.1
+   94  cd linux4.11.1/
+   95  unzip ~/Downloads/linux-rpi-4.11.y.zip 
+   96  ls
+   97  cd linux-rpi-4.11.y/
+   98  ls
+   99  cd arch/
+  100  ls
+  101  ls arm64/
+  102  ls arm64/configs/
+  103  cd ..
+  104  ls -l
+  105  nautilus&
+  106  nautilus
+  107  cd ..
+  108  cd linux4.11.1/
+  109  ls
+  110  cd linux-rpi-4.11.y/
+  111  make xconf
+  112  make xconfig 
+  113  ls
+  114  make menuconfig 
+  115  sudo dnf search ncurses
+  116  sudo dnf search ncurses | less
+  117  sudo dnf install ncurses-devel
+  118  make menuconfig 
+  119  ls arch/arm64/configs/
+  120  make bcmrpi3_defconfig
+  121  echo $PATH
+  122  ls ~/linuxRpi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/
+  123  ls ~/linuxRpi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin
+  124  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm bcmrpi3_defconfig
+  125* make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 
+  126  KERNEL=kernel17
+  127  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm bcmrpi3_defconfig
+  128  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 bcmrpi3_defconfig
+  129  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 -j 8 zImage modules dtbs
+  130  echo $PATH
+  131  export PATH=$PATH/bin
+  132  echo $PATH
+  133  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 -j 8 zImage modules dtbs
+  134  ls
+  135  ls -l arch/arm64/
+  136  gedit arch/arm64/Makefile 
+  137  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 -j 8 zImage modules dtbs
+  138  cd ../../
+  139  ls
+  140  cd linaro/
+  141  ls
+  142  cd ..
+  143  ls
+  144  mv gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/ ./linaro/
+  145  ls
+  146  cd linaro/
+  147  ls
+  148  mv gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/* .
+  149  ls
+  150  ls -a gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/
+  151  rm gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/
+  152  rm -R gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/
+  153  ls
+  154  ls aarch64-linux-gnu/
+  155  ls aarch64-linux-gnu/bin/
+  156  ls =l aarch64-linux-gnu/bin/
+  157  ls -l
+  158  ls -l aarch64-linux-gnu/bin/
+  159  ls -l bin/
+  160  pwd
+  161  echo $PATH
+  162  ls -la ~/.ba*
+  163  pwd
+  164  history > ~/linuxRpi/history1
