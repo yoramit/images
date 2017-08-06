@@ -1,0 +1,277 @@
+    1  pwd
+    2  cd linuxRpi
+    3  mkdir linuxRpi;cd linuxRpi
+    4  pwd
+    5  git clone https://github.com/raspberrypi/tools
+    6  ls
+    7  cd tools/
+    8  ls
+    9  ls arm-bcm2708/
+   10  pwd
+   11  cd ..
+   12  file tools/
+   13  ls -l
+   14  ls -a tools/
+   15  unzip ../Downloads/documentation-master.zip 
+   16  ls
+   17  cd documentation-master/
+   18  ls -l
+   19  cd ..
+   20  ls
+   21  ls tools/
+   22  ls -l tools/
+   23  file tools/sysidk 
+   24  gedit tools/sysidk 
+   25  ls -l tools/mkimage/ 
+   26  file tools/mkimage/imagetool-uncompressed.py 
+   27  file tools/mkimage/first32k.bin 
+   28  cd tools/
+   29  cd arm-bcm2708/
+   30  ls
+   31  dnf search *arm-rpi*
+   32  dnf list *arm-rpi*
+   33  dnf repoquery *arm-rpi*
+   34  dnf repolist *arm-rpi*
+   35  dnf list installed *arm-rpi*
+   36  dnf list installed
+   37  dnf list installed | less
+   38  ls
+   39  pwd
+   40  cd ../..
+   41  ls
+   42  unzip ~/Downloads/tools-master.zip 
+   43  ls
+   44  ifcfg 
+   45  ifstat 
+   46  ifconfig 
+   47  sudo systemctl start sshd
+   48  su -
+   49  sudo systemctl start sshd
+   50  su -
+   51  sudo systemctl start sshd
+   52  su -
+   53  sudo systemctl start sshd
+   54  dnf search linaro
+   55  dnf search linaro-arm
+   56  dnf search linaro
+   57  dnf search gcc-linaro
+   58  dnf search gcc-
+   59  dnf list *linux*
+   60  dnf search *linux* | less
+   61  dnf search *arm-linux* | less
+   62  dnf search *arm-* | less
+   63  dnf list *arm-* | less
+   64  dnf list *gnueabi* | less
+   65  dnf list *rpi* | less
+   66  dnf list *raspberry* | less
+   67  dnf search *rpi* | less
+   68  dnf list installed > ~/installedpacks
+   69  gedit ~/installedpacks 
+   70  dnf repoquery
+   71  dnf repolist
+   72  dnf list *raspb*
+   73  dnf list *bcm*
+   74  dnf list *bcm2*
+   75  dnf list *arm-bcm2*
+   76  sudo systemctl sshd start
+   77  echo $PATH
+   78  ls
+   79  git status
+   80  ls
+   81  ls mkimage/
+   82  find . -iname mkknl*
+   83  ls configs/
+   84  nautilus
+   85  nautilus&
+   86  ls
+   87  ps
+   88  ls -l
+   89  ls
+   90  cd tools
+   91  git branch
+   92  git tag
+   93  git log
+   94  git log|less
+   95  echo $PATH
+   96  dnf list available *linaro*
+   97  cd ..
+   98  pwd
+   99  ls
+  100  mkdir linux4.11.1
+  101  cd linux4.11.1/
+  102  unzip ~/Downloads/linux-rpi-4.11.y.zip 
+  103  ls
+  104  cd linux-rpi-4.11.y/
+  105  ls
+  106  cd arch/
+  107  ls
+  108  ls arm64/
+  109  ls arm64/configs/
+  110  cd ..
+  111  ls -l
+  112  nautilus&
+  113  nautilus
+  114  cd ..
+  115  cd linux4.11.1/
+  116  ls
+  117  cd linux-rpi-4.11.y/
+  118  make xconf
+  119  make xconfig 
+  120  ls
+  121  make menuconfig 
+  122  sudo dnf search ncurses
+  123  sudo dnf search ncurses | less
+  124  sudo dnf install ncurses-devel
+  125  make menuconfig 
+  126  ls arch/arm64/configs/
+  127  make bcmrpi3_defconfig
+  128  echo $PATH
+  129  ls ~/linuxRpi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/
+  130  ls ~/linuxRpi/tools/arm-bcm2708/arm-rpi-4.9.3-linux-gnueabihf/bin
+  131  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm bcmrpi3_defconfig
+  132  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 
+  133  KERNEL=kernel17
+  134  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm bcmrpi3_defconfig
+  135  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 bcmrpi3_defconfig
+  136  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 -j 8 zImage modules dtbs
+  137  echo $PATH
+  138  export PATH=$PATH/bin
+  139  echo $PATH
+  140  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 -j 8 zImage modules dtbs
+  141  ls
+  142  ls -l arch/arm64/
+  143  gedit arch/arm64/Makefile 
+  144  make CROSS_COMPILE=arm-linux-gnueabihf- ARCH=arm64 -j 8 zImage modules dtbs
+  145  cd ../../
+  146  ls
+  147  cd linaro/
+  148  ls
+  149  cd ..
+  150  ls
+  151  mv gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/ ./linaro/
+  152  ls
+  153  cd linaro/
+  154  ls
+  155  mv gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/* .
+  156  ls
+  157  ls -a gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/
+  158  rm gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/
+  159  rm -R gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu/
+  160  ls
+  161  ls aarch64-linux-gnu/
+  162  ls aarch64-linux-gnu/bin/
+  163  ls =l aarch64-linux-gnu/bin/
+  164  ls -l
+  165  ls -l aarch64-linux-gnu/bin/
+  166  ls -l bin/
+  167  pwd
+  168  echo $PATH
+  169  ls -la ~/.ba*
+  170  pwd
+  171  history > ~/linuxRpi/history1
+  172  history
+  173  pwd
+  174  cd linuxRpi/
+  175  ls
+  176  git clone https://github.com/raspberrypi/linux
+  177  ls
+  178  git clone --depth=1 https://github.com/raspberrypi/linux
+  179  ls
+  180  cd tools
+  181  ls
+  182  cd arm-bcm2708/
+  183  ls
+  184  ls arm-bcm2708-linux-gnueabi/
+  185  ls arm-bcm2708-linux-gnueabi/bin
+  186  cd ..
+  187  pwd
+  188  ls
+  189  cd ..
+  190  mkdir linaro
+  191  tar -xvf ~/Downloads/gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu.tar.xz 
+  192  rm ~/Downloads/gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu.tar.xz 
+  193  tar -xvf ~/Downloads/gcc-linaro-5.4.1-2017.05-i686_aarch64-linux-gnu.tar.xz
+  194  ls
+  195  ls -a ~
+  196  ls -al ~
+  197  chmod 626 ~/.bashrc 
+  198  gedit 626 ~/.bashrc 
+  199  gedit  ~/.bashrc 
+  200  echo $PATH
+  201  ls -al ~
+  202  ls -al ~/linuxRpi/linaro/bin/
+  203  pwd
+  204  cd linuxRpi/
+  205  ls
+  206  cd linux4.11.1/
+  207  cd linux-rpi-4.11.y/
+  208  make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 -j 8 zImage modules dtbs
+  209  gedit ./arch/arm64/Makefile 
+  210  make xconfig
+  211  dnf list installed *QT*
+  212  make xconfig
+  213  dnf search Qt
+  214  dnf search ^Qt
+  215  dnf search Qt5
+  216  dnf install Qt
+  217  sudo dnf install Qt
+  218  sudo dnf install Qt5
+  219  sudo dnf install Qt-4.8
+  220  sudo dnf install Qt-5.8.0
+  221  sudo dnf list Qt5
+  222  sudo dnf list Qt5*
+  223  sudo dnf list Qt5* | less
+  224  make xconfig
+  225  ver
+  226  var
+  227  echo $PKG_CONFIG_PATH
+  228  make xconfig
+  229  make CROSS_COMPILE=aarch64-linux-gnu- ARCH=arm64 xconfig
+  230  sudo systemctl start sshd
+  231  ifconfig
+  232  sudo systemctl start sshd
+  233  sudo systemctl stop sshd
+  234  sudo systemctl start sshd
+  235  ls ~
+  236  ls ~/linuxRpi/
+  237  less ~/linuxRpi/history1 
+  238  ls ~/linuxRpi/
+  239  cd ./linuxRpi/linux4.11.1/linux-rpi-4.11.y/
+  240  dnf list Qt5*
+  241  dnf list Qt5* | less
+  242  dnf install Qt5-devel
+  243  sudo dnf install Qt5-devel
+  244  dnf list Qt5* | less
+  245  sudo dnf install Qt5-devel.noarch
+  246  dnf list Qt5* | less
+  247  sudo dnf install Qt5-devel.noarch-5.7.1-1.fc25
+  248  sudo dnf install Qt5-devel.noarch.5.7.1-1.fc25
+  249  dnf search Qt5* | less
+  250  sudo dnf install qt5-devel.noarch
+  251  cp .config rpi3_config
+  252  sudo systemctl stat sshd
+  253  sudo systemctl status sshd
+  254  ping 192.168.56.101
+  255  ping 192.168.56.102
+  256  ping 192.168.56.101
+  257  sudo systemctl stop sshd
+  258  sudo systemctl start sshd
+  259  ping 192.168.56.101
+  260  ifconfig
+  261  sudo systemctl status sshd 
+  262  dmesg tail
+  263  dmesg tail 3
+  264  dmesg tail 3 | less
+  265  dmesg -H
+  266  dmesg
+  267  dmesg -k
+  268  dmesg -k | less
+  269  dmesg -H
+  270  pwd
+  271  ls
+  272  history | less
+  273  ls
+  274  cd linuxRpi/
+  275  ls
+  276  gedit history1 
+  277  history > history2
