@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weighted Least Squares עם מקדם Ci ורגולריזציית L2</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    tags: 'ams'
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root{
+    --bg:#ffffff; --panel:#f7f8fa; --panel2:#eef0f4; --border:#c7cbd4;
+    --text:#1a1d23; --muted:#5a606b; --accent:#0a5cc9; --accent2:#0e7a5f;
+    --warn:#b45400; --good:#0e7a5f;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Segoe UI", Arial, sans-serif;
+    margin:0; padding:1.2rem 1.5rem 3rem; line-height:1.5; font-size:15px;
+  }
+  h1{font-size:1.4rem; margin:0 0 .2rem; color:var(--accent)}
+  h2{
+    font-size:1.05rem; margin:1.6rem 0 .5rem; padding-bottom:.25rem;
+    border-bottom:1px solid var(--border); color:var(--accent2);
+  }
+  p{margin:.35rem 0}
+  .sub{color:var(--muted); font-size:.85rem; margin-bottom:1rem}
+  .card{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:10px; padding:.9rem 1.1rem; margin:.6rem 0;
+  }
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:.7rem}
+  @media (max-width:760px){.grid2{grid-template-columns:1fr}}
+  table{border-collapse:collapse; margin:.5rem 0; width:auto}
+  th,td{
+    border:1px solid var(--border); padding:.35rem .6rem;
+    text-align:center; font-size:.9rem;
+  }
+  th{background:var(--panel2); color:var(--accent)}
+  .idx{color:var(--muted); font-size:.85rem}
+  .formula-box{
+    background:var(--panel2); border:1px solid var(--border);
+    border-radius:8px; padding:.6rem .9rem; margin:.5rem 0;
+    overflow-x:auto; color:var(--text);
+  }
+  .note{
+    background:#eaf1fb; border-inline-start:3px solid var(--accent);
+    padding:.5rem .8rem; border-radius:4px; color:var(--muted); font-size:.87rem;
+  }
+  .check{color:var(--good); font-weight:700}
+  .step-num{
+    display:inline-block; background:var(--accent); color:#ffffff;
+    font-weight:700; border-radius:50%; width:1.5em; height:1.5em;
+    line-height:1.5em; text-align:center; font-size:.8rem; margin-left:.4em;
+  }
+  hr{border:none; border-top:1px solid var(--border); margin:1.4rem 0}
+  .mono{font-family:Consolas, monospace; direction:ltr; display:inline-block; white-space:pre}
+</style>
+</head>
+<body>
+
+<h1>Weighted Least Squares עם מקדם Ci ורגולריזציית L2</h1>
+<p class="sub">דוגמה מספרית מלאה: 5 דגימות · 2 פיצ'רים + היסט · משקל שונה לכל דגימה</p>
+
+<h2><span class="step-num">1</span>הגדרת הבעיה, הנתונים ותנאי ההתחלה</h2>
+
+<div class="card">
+<p>יש $n=5$ דגימות, $d=2$ פיצ'רים ($x_1,x_2$) והיסט. לכל דגימה $i$ נבחר מקדם משקל $C_i>0$ מראש, לפני האופטימיזציה (זהו היפרפרמטר, לא נגזר מהפתרון).</p>
+
+<p><b>תנאי ההתחלה שנבחר:</b> דגימה מספר 3 מסומנת כבעלת אמינות/חשיבות גבוהה יותר (למשל מקור מדידה נוסף שמאשש אותה), ולכן מקבלת משקל $C_3=3$. שאר הדגימות מקבלות משקל בסיס $C_i=1$. פרמטר הרגולריזציה נבחר $\lambda=1$.</p>
+
+<table>
+<tr><th>דגימה $i$</th><th>$x_{i1}$</th><th>$x_{i2}$</th><th>$y_i$</th><th>$C_i$</th></tr>
+<tr><td>1</td><td>1</td><td>2</td><td>+1</td><td>1</td></tr>
+<tr><td>2</td><td>2</td><td>1</td><td>&minus;1</td><td>1</td></tr>
+<tr><td>3</td><td>3</td><td>3</td><td>+1</td><td><b>3</b></td></tr>
+<tr><td>4</td><td>0</td><td>1</td><td>&minus;1</td><td>1</td></tr>
+<tr><td>5</td><td>2</td><td>0</td><td>+1</td><td>1</td></tr>
+</table>
+
+<p>מטריצת העיצוב $X\in\mathbb{R}^{5\times3}$, וקטור התוויות $y\in\mathbb{R}^5$, ומטריצת המשקלים האלכסונית $W_C\in\mathbb{R}^{5\times5}$:</p>
+
+$$
+X=\begin{bmatrix}1&1&2\\1&2&1\\1&3&3\\1&0&1\\1&2&0\end{bmatrix}
+\qquad
+y=\begin{bmatrix}\;\;1\\-1\\\;\;1\\-1\\\;\;1\end{bmatrix}
+\qquad
+W_C=\begin{bmatrix}1&0&0&0&0\\0&1&0&0&0\\0&0&3&0&0\\0&0&0&1&0\\0&0&0&0&1\end{bmatrix}
+$$
+
+<p class="idx">אינדקס $i=1,\dots,5$ — דגימה. אינדקס $j=0,1,2$ — פיצ'ר ($j{=}0$ היסט). $\lambda=1$.</p>
+</div>
+
+<h2><span class="step-num">2</span>פונקציית המחיר</h2>
+
+<div class="card">
+<p>מחפשים $w=[w_0,w_1,w_2]^{\top}$ שממזער סכום שגיאות ריבועיות <b>משוקללות</b> בתוספת עונש L2:</p>
+
+$$
+J(w)=\sum_{i=1}^{5}C_i\Big(y_i-\sum_{j=0}^{2}X_{ij}\,w_j\Big)^{2}\;+\;\lambda\sum_{j=0}^{2}w_j^{2}
+$$
+
+<p>בכתיב מטריציוני:</p>
+
+$$
+J(w)=(y-Xw)^{\top}W_C(y-Xw)+\lambda\,w^{\top}w
+$$
+
+<p class="note">ההבדל היחיד מ-Least Squares הרגיל: כל איבר בסכום השגיאות מוכפל ב-$C_i$ המתאים לדגימה $i$. דגימה עם $C_i$ גדול "כואבת" יותר בפונקציית המחיר, ולכן הפתרון יזוז לכיוונה.</p>
+</div>
+
+<h2><span class="step-num">3</span>הנגזרת ותנאי האופטימליות</h2>
+
+<div class="card">
+<p>נגזרת חלקית לפי $w_j$ (אינדקס בודד):</p>
+
+$$
+\frac{\partial J}{\partial w_j}=-2\sum_{i=1}^{5}C_i\,X_{ij}\Big(y_i-\sum_{k=0}^{2}X_{ik}w_k\Big)+2\lambda w_j
+$$
+
+<p>בכתיב מטריציוני (גרדיאנט מלא ביחס לוקטור $w$):</p>
+
+$$
+\nabla_w J=-2X^{\top}W_C\big(y-Xw\big)+2\lambda w
+$$
+
+<p>פתיחת הסוגריים:</p>
+
+$$
+\nabla_w J=-2X^{\top}W_Cy+2X^{\top}W_CXw+2\lambda w
+$$
+
+<p>השוואה לאפס ($\nabla_w J=0$) ובידוד $w$:</p>
+
+$$
+X^{\top}W_CXw+\lambda w=X^{\top}W_Cy
+\quad\Rightarrow\quad
+\big(X^{\top}W_CX+\lambda I\big)w=X^{\top}W_Cy
+$$
+
+<p>הפתרון הסגור:</p>
+
+$$
+\boxed{\;w=\big(X^{\top}W_CX+\lambda I\big)^{-1}X^{\top}W_Cy\;}
+$$
+</div>
+
+<h2><span class="step-num">4</span>חישוב $X^{\top}W_CX$ — לפי אינדקסים</h2>
+
+<div class="card">
+<p>הגדרה כללית לאיבר $(j,k)$, כעת עם $C_i$ בתוך הסכום:</p>
+$$
+\big(X^{\top}W_CX\big)_{jk}=\sum_{i=1}^{5}C_i\,X_{ij}\,X_{ik}
+$$
+
+<div class="grid2">
+<div>
+<p><b>איבר $(0,0)$:</b></p>
+<p class="formula-box mono">Σ Ci·1·1 = 1+1+3+1+1 = 7</p>
+<p><b>איבר $(0,1)$:</b></p>
+<p class="formula-box mono">Σ Ci·1·xi1 = 1·1+1·2+3·3+1·0+1·2 = 14</p>
+<p><b>איבר $(0,2)$:</b></p>
+<p class="formula-box mono">Σ Ci·1·xi2 = 1·2+1·1+3·3+1·1+1·0 = 13</p>
+</div>
+<div>
+<p><b>איבר $(1,1)$:</b></p>
+<p class="formula-box mono">Σ Ci·xi1² = 1·1+1·4+3·9+1·0+1·4 = 36</p>
+<p><b>איבר $(1,2)$:</b></p>
+<p class="formula-box mono">Σ Ci·xi1·xi2 = 1·2+1·2+3·9+1·0+1·0 = 31</p>
+<p><b>איבר $(2,2)$:</b></p>
+<p class="formula-box mono">Σ Ci·xi2² = 1·4+1·1+3·9+1·1+1·0 = 33</p>
+</div>
+</div>
+
+<p>לב חישוב האיבר $(1,1)$ בדגימה 3 בלבד להמחשה: $C_3\cdot x_{31}^2=3\cdot3^2=27$ — תרומה גדולה יחסית לשאר הדגימות (שכל אחת תורמת לכל היותר $4$), בגלל המשקל הגבוה.</p>
+
+$$
+X^{\top}W_CX=\begin{bmatrix}7&14&13\\14&36&31\\13&31&33\end{bmatrix}
+$$
+</div>
+
+<h2><span class="step-num">5</span>הוספת הרגולריזציה</h2>
+
+<div class="card">
+$$
+X^{\top}W_CX+\lambda I=
+\begin{bmatrix}7&14&13\\14&36&31\\13&31&33\end{bmatrix}
++
+\begin{bmatrix}1&0&0\\0&1&0\\0&0&1\end{bmatrix}
+=
+\begin{bmatrix}8&14&13\\14&37&31\\13&31&34\end{bmatrix}
+$$
+</div>
+
+<h2><span class="step-num">6</span>חישוב $X^{\top}W_Cy$ — לפי אינדקסים</h2>
+
+<div class="card">
+$$
+\big(X^{\top}W_Cy\big)_{j}=\sum_{i=1}^{5}C_i\,X_{ij}\,y_i
+$$
+
+<p class="formula-box mono">j=0: Σ Ci·1·yi = 1·1·1+1·1·(-1)+3·1·1+1·1·(-1)+1·1·1 = 1-1+3-1+1 = 3
+j=1: Σ Ci·xi1·yi = 1·1·1+1·2·(-1)+3·3·1+1·0·(-1)+1·2·1 = 1-2+9+0+2 = 10
+j=2: Σ Ci·xi2·yi = 1·2·1+1·1·(-1)+3·3·1+1·1·(-1)+1·0·1 = 2-1+9-1+0 = 9</p>
+
+$$
+X^{\top}W_Cy=\begin{bmatrix}3\\10\\9\end{bmatrix}
+$$
+</div>
+
+<h2><span class="step-num">7</span>פתרון המערכת הליניארית</h2>
+
+<div class="card">
+<p>פותרים $Aw=b$ כאשר $A=X^\top W_CX+\lambda I$ ו-$b=X^\top W_Cy$:</p>
+
+$$
+\begin{bmatrix}8&14&13\\14&37&31\\13&31&34\end{bmatrix}
+\begin{bmatrix}w_0\\w_1\\w_2\end{bmatrix}
+=\begin{bmatrix}3\\10\\9\end{bmatrix}
+$$
+
+<p><b>אלימינציית גאוס:</b></p>
+
+<p class="formula-box mono">R1: [8, 14, 13 | 3]
+
+R2 ← R2 − (14/8)R1 = R2 − (7/4)R1:
+R2: [0, 25/2, 33/4 | 19/4]
+
+R3 ← R3 − (13/8)R1:
+R3: [0, 33/4, 103/8 | 33/8]
+
+R3 ← R3 − (33/50)R2   (מבטל את w1 בשורה 3):
+R3: [0, 0, 743/100 | 99/100]</p>
+
+<p><b>הצבה לאחור:</b></p>
+
+<p class="formula-box mono">שלב א׳ — מ-R3:
+w2 = (99/100) / (743/100) = 99/743
+
+שלב ב׳ — מ-R2:  (25/2)w1 + (33/4)w2 = 19/4
+25/2·w1 = 19/4 − 33/4·(99/743)
+25/2·w1 = 10850/2972
+w1 = 217/743
+
+שלב ג׳ — מ-R1:  8w0 + 14w1 + 13w2 = 3
+8·w0 = 3 − 14·(217/743) − 13·(99/743)
+8·w0 = −2096/743
+w0 = −262/743</p>
+
+<p>התוצאה הסופית:</p>
+
+$$
+w=\big(X^{\top}W_CX+\lambda I\big)^{-1}X^{\top}W_Cy=
+\frac{1}{743}\begin{bmatrix}-262\\\;\;217\\\;\;99\end{bmatrix}
+\approx
+\begin{bmatrix}-0.3526\\\;\;0.2921\\\;\;0.1332\end{bmatrix}
+$$
+
+<p>פונקציית המסווג הסופית: $f(x)=-0.3526+0.2921\,x_1+0.1332\,x_2$.</p>
+</div>
+
+<h2><span class="step-num">8</span>אימות הפתרון</h2>
+
+<div class="card">
+<p>מציבים חזרה ב-$Aw\overset{?}{=}b$, לפי $\sum_{k}A_{jk}\,w_k$:</p>
+
+<p class="formula-box mono">שורה j=0:
+8·(-262) + 14·217 + 13·99 = -2096+3038+1287 = 2229
+2229 / 743 = 3  ✓  (תואם ל-b0=3)
+
+שורה j=1:
+14·(-262) + 37·217 + 31·99 = -3668+8029+3069 = 7430
+7430 / 743 = 10  ✓  (תואם ל-b1=10)
+
+שורה j=2:
+13·(-262) + 31·217 + 34·99 = -3406+6727+3366 = 6687
+6687 / 743 = 9  ✓  (תואם ל-b2=9)</p>
+
+<p class="check">שלוש המשוואות מתקיימות בדיוק — הפתרון w נכון.</p>
+</div>
+
+<h2><span class="step-num">9</span>השוואה למקרה ללא משקול (Ci=1 לכולם)</h2>
+
+<div class="card">
+<p>בפתרון המקביל עם $C_i=1$ לכל הדגימות ואותו $\lambda=1$ (ראו קובץ קודם), התקבל:</p>
+
+$$
+w^{\text{uniform}}\approx\begin{bmatrix}-0.3215\\\;\;0.2733\\\;\;0.1061\end{bmatrix}
+\qquad\text{לעומת}\qquad
+w^{\text{weighted}}\approx\begin{bmatrix}-0.3526\\\;\;0.2921\\\;\;0.1332\end{bmatrix}
+$$
+
+<p>ניכר ששלושת המקדמים זזו — במיוחד $w_2$ (המקדם של $x_2$), שגדל באופן יחסי הכי משמעותי. הסיבה: דגימה 3, שקיבלה משקל $C_3{=}3$, היא בעלת הערך הגבוה ביותר של $x_2$ ($x_{32}=3$) מכל הדגימות. הגדלת המשקל שלה "משכה" את $w_2$ כלפי מעלה כדי להתאים לה טוב יותר.</p>
+</div>
+
+<hr>
+<p class="note">
+<b>סיכום התהליך:</b> קביעת $C_i$ כהיפרפרמטר מראש (תנאי התחלה) &rarr; בניית $W_C=\text{diag}(C_1,\dots,C_5)$ &rarr; חישוב $X^\top W_CX$ ו-$X^\top W_Cy$ (כל דגימה תורמת פרופורציונלית ל-$C_i$ שלה) &rarr; הוספת $\lambda I$ &rarr; פתרון מערכת ליניארית יחידה &rarr; $w$ המתקבל משקף פשרה גלובלית שמוטה לכיוון הדגימות בעלות המשקל הגבוה.
+</p>
+
+</body>
+</html>
