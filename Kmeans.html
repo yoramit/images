@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אלגוריתם K-Means - תיאוריה ומתמטיקה</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+        h3 {
+            color: #2980b9;
+        }
+        ul {
+            padding-right: 20px;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 15px;
+        }
+        .formula-box {
+            background-color: #f8f9fa;
+            border-right: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>אלגוריתם K-Means</h1>
+        <p>אלגוריתם <strong>K-Means</strong> (קיי-תוחלות) הוא אחד מהאלגוריתמים המוכרים, הפשוטים והיעילים ביותר בלמידת מכונה ללא פיקוח (Unsupervised Learning).</p>
+
+        <h2>1. התיאוריה שמאחורי האלגוריתם</h2>
+        <p>המטרה של K-Means היא לפתור בעיית <strong>אשכול (Clustering)</strong>: בהינתן אוסף של נתונים ללא תגיות (Unlabeled data), האלגוריתם מנסה למצוא בהם מבנה חבוי ולחלק אותם ל- $K$ קבוצות (אשכולות) מובחנות.</p>
+        <p>הרעיון המרכזי הוא שנקודות השייכות לאותו אשכול צריכות להיות דומות (קרובות במרחב) זו לזו ככל האפשר, ושונות (רחוקות) מנקודות באשכולות אחרים. המספר $K$ מוגדר מראש על ידי המשתמש.</p>
+
+        <h2>2. פונקציית המחיר (Cost Function) ומינימום שגיאה</h2>
+        <p>כדי למצוא את האשכולות הטובים ביותר, האלגוריתם מגדיר מדד של "שגיאה" או "עלות" שאותו הוא שואף למזער. מדד זה נקרא לרוב <strong>WCSS</strong> (Within-Cluster Sum of Squares) או אינרציה (Inertia).</p>
+        <p>פונקציית המטרה (המחיר) מוגדרת כסכום ריבועי המרחקים של כל נקודה ממרכז האשכול (הצנטרואיד) אליו היא משויכת:</p>
+        
+        <div class="formula-box">
+            $$J = \sum_{j=1}^{K} \sum_{i=1}^{n_j} \|x_i^{(j)} - \mu_j\|^2$$
+        </div>
+
+        <p>כאשר:</p>
+        <ul>
+            <li>$J$ היא פונקציית המחיר (השגיאה הכוללת שרוצים למזער).</li>
+            <li>$K$ הוא מספר האשכולות.</li>
+            <li>$n_j$ הוא מספר הנקודות באשכול ה- $j$.</li>
+            <li>$x_i^{(j)}$ היא נקודת הנתונים ה- $i$ ששייכת לאשכול ה- $j$.</li>
+            <li>$\mu_j$ הוא ה<strong>צנטרואיד</strong> (מרכז המסה / הממוצע) של אשכול $j$.</li>
+            <li>$\|x - \mu\|^2$ הוא המרחק האוקלידי בריבוע בין הנקודה לצנטרואיד שלה.</li>
+        </ul>
+        <p><strong>מציאת מינימום שגיאה:</strong> מטרת האלגוריתם היא למצוא את המיקומים של המרכזים $\mu_j$ ואת השיוך של הנקודות $x_i$ כך שהערך של $J$ יהיה מינימלי. הבעיה המדויקת של מציאת המינימום המוחלט היא בעיה קשה מאוד חישובית, ולכן משתמשים בתהליך התכנסות איטרטיבי שמוצא מינימום מקומי.</p>
+
+        <h2>3. הליך ההתכנסות (Convergence Process)</h2>
+        <p>האלגוריתם משיג את המינימום המקומי של פונקציית המחיר באמצעות תהליך פשוט של "ציפייה-מקסום" (Expectation-Maximization) בן 4 שלבים:</p>
+
+        <h3>שלב 1: אתחול (Initialization)</h3>
+        <p>בוחרים באקראי $K$ נקודות במרחב הנתונים. נקודות אלו ישמשו כמרכזים ההתחלתיים (הצנטרואידים) של האשכולות, $\mu_1, \mu_2, \dots, \mu_K$.</p>
+
+        <h3>שלב 2: שיוך (Assignment Step)</h3>
+        <p>עוברים על כל נקודת נתונים $x_i$ במדגם, ומחשבים את המרחק שלה לכל אחד מ- $K$ הצנטרואידים באמצעות נוסחת המרחק האוקלידי:</p>
+        <div class="formula-box">
+            $$d(x, \mu) = \sqrt{\sum_{m=1}^{d} (x_m - \mu_m)^2}$$
+        </div>
+        <p>משייכים כל נקודה לאשכול שהצנטרואיד שלו הוא ה<strong>קרוב ביותר</strong> אליה.</p>
+
+        <h3>שלב 3: עדכון מרכזים (Update Step)</h3>
+        <p>לאחר שכל הנקודות שויכו לאשכולות, מחשבים ממוצע מחדש עבור כל אשכול. הצנטרואיד החדש $\mu_j$ יהיה פשוט הממוצע החשבוני (מרכז המסה) של כל הנקודות ששויכו לאותו אשכול:</p>
+        <div class="formula-box">
+            $$\mu_j = \frac{1}{|C_j|} \sum_{x \in C_j} x$$
+        </div>
+        <p><em>(כאשר $|C_j|$ הוא מספר הנקודות באשכול $j$).</em></p>
+
+        <h3>שלב 4: תנאי עצירה (Convergence)</h3>
+        <p>חוזרים על שלבים 2 ו-3 בלולאה. תהליך ההתכנסות נעצר כאשר מתקיים אחד מהתנאים הבאים:</p>
+        <ul>
+            <li>הצנטרואידים מפסיקים לזוז (או זזים פחות מסף מינימלי שהוגדר מראש).</li>
+            <li>אף נקודה לא מחליפה את האשכול שלה בין איטרציות (שיוך יציב).</li>
+            <li>הושג המספר המקסימלי של איטרציות שהוגדר מראש.</li>
+        </ul>
+    </div>
+
+</body>
+</html>
