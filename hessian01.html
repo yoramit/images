@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>מטריצת הסיאן - סיגמויד מול Tanh</title>
+<script>
+MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Arial", sans-serif;
+    font-size: 13px;
+    line-height: 1.25;
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 10px;
+    color: #111;
+  }
+  h1 {
+    font-size: 15px;
+    margin: 8px 0 4px 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 2px;
+  }
+  h2 {
+    font-size: 13.5px;
+    margin: 6px 0 3px 0;
+    color: #333;
+  }
+  p, .line { margin: 2px 0; padding: 0; }
+  .box {
+    background: #eef4ee;
+    border-right: 3px solid #4a7;
+    padding: 3px 6px;
+    margin: 3px 0;
+  }
+  .warn {
+    background: #fdf0ee;
+    border-right: 3px solid #d55;
+    padding: 3px 6px;
+    margin: 3px 0;
+  }
+  mjx-container { margin: 0 !important; }
+</style>
+</head>
+<body>
+
+<h1>מקרה א' — סיגמויד עם תיוג $y\in\{0,1\}$ (קמירות גלובלית)</h1>
+
+<h2>פונקציית העלות</h2>
+<p class="line">אנטרופיה צולבת בינארית: $L_i = -\big[y^{(i)}\log\sigma(z^{(i)}) + (1-y^{(i)})\log(1-\sigma(z^{(i)}))\big]$, כאשר $z^{(i)}=W^Tx^{(i)}$, $\sigma(z)=\frac{1}{1+e^{-z}}$, ו-$J(W)=\frac{1}{m}\sum_{i=1}^m L_i$.</p>
+
+<h2>נגזרת ראשונה</h2>
+<p class="line">בעזרת הזהות $\sigma'(z)=\sigma(z)(1-\sigma(z))$, הנגזרת ביחס לפלט הגולמי מצטמצמת יפה: $\dfrac{\partial L_i}{\partial z^{(i)}} = \sigma(z^{(i)}) - y^{(i)} = p^{(i)} - y^{(i)}$.</p>
+<p class="line">בכלל השרשרת עם $\dfrac{\partial z^{(i)}}{\partial W}=x^{(i)}$ מקבלים גרדיאנט: $\nabla_W L_i = \big(\sigma(z^{(i)}) - y^{(i)}\big)\,x^{(i)}$.</p>
+
+<h2>נגזרת שנייה (הסיאן לדוגמה בודדת)</h2>
+<p class="line">גוזרים שוב ביחס ל-$W$: $H_i = \dfrac{\partial}{\partial W}\big(\sigma(z^{(i)}) - y^{(i)}\big)(x^{(i)})^T$.</p>
+<p class="line">התיוג $y^{(i)}$ הוא קבוע חיבורי ונגזרתו אפס — נשאר רק $\dfrac{\partial}{\partial W}\sigma(z^{(i)}) = \sigma(z^{(i)})(1-\sigma(z^{(i)}))\,x^{(i)}$, ולכן: $H_i = \sigma(z^{(i)})(1-\sigma(z^{(i)}))\,x^{(i)}(x^{(i)})^T$.</p>
+<div class="box">שים לב להבדל מהמקרה של $\{-1,+1\}$: שם התיוג נעלם מהנגזרת <b>השנייה</b> כי $(y)^2=1$; כאן הוא נעלם כבר מהנגזרת <b>הראשונה</b> כאיבר חיבורי. אותה תוצאה — אותו מודל, תיוג שונה.</div>
+
+<h2>מרכיבי ההסיאן</h2>
+<p class="line">מסמנים $D_{ii} = \sigma(z^{(i)})(1-\sigma(z^{(i)})) = p^{(i)}(1-p^{(i)})$ — שונות ברנולי של התחזית.</p>
+<p class="line">הסיאן מלא: $H = \dfrac{1}{m}\sum_{i=1}^m D_{ii}\,x^{(i)}(x^{(i)})^T = \dfrac{1}{m}X^TDX$, כאשר $X$ בגודל $m\times n$ ו-$D$ אלכסונית $m\times m$.</p>
+<div class="box">מכיוון ש-$D_{ii}=p(1-p)\in(0,\tfrac14]$ ולכן חיובי תמיד — ההסיאן Positive Semi-Definite. הפונקציה קמורה לחלוטין, עם מינימום גלובלי יחיד.</div>
+
+<h1>מקרה ב' — Tanh עם שגיאה ריבועית (קמירות מקומית בלבד)</h1>
+
+<h2>פונקציית העלות</h2>
+<p class="line">כאן Tanh משמש כ<b>אקטיבציה</b> ולא כלוגיט: $a^{(i)}=\tanh(z^{(i)})$, $z^{(i)}=W^Tx^{(i)}$, והעלות היא שגיאה ריבועית $L_i = \tfrac12\big(a^{(i)} - y^{(i)}\big)^2$.</p>
+
+<h2>נגזרת ראשונה</h2>
+<p class="line">עם $\tanh'(z)=1-a^2$, כלל השרשרת נותן: $\dfrac{\partial L_i}{\partial z^{(i)}} = \big(a^{(i)}-y^{(i)}\big)\,(1-a^2)$, ולכן הגרדיאנט: $\nabla_W L_i = \big(a^{(i)}-y^{(i)}\big)(1-a^2)\,x^{(i)}$.</p>
+
+<h2>נגזרת שנייה — הצורה החושפת</h2>
+<p class="line">עבור עלות $L=\tfrac12(a-y)^2$ עם $a=f(z)$ מתקיימת הזהות הכללית: $\dfrac{\partial^2 L}{\partial z^2} = \underbrace{(f'(z))^2}_{\text{Gauss-Newton}} + \underbrace{(a-y)\,f''(z)}_{\text{שארית}\times\text{עקמומיות}}$.</p>
+<p class="line">עבור Tanh: $f'=1-a^2$ ו-$f''=-2a(1-a^2)$, ולכן: $\dfrac{\partial^2 L_i}{\partial z^2} = (1-a^2)^2 - 2a(a-y)(1-a^2) = (1-a^2)\big(1 - 3a^2 + 2y a\big)$.</p>
+<p class="line">מסמנים $D_{ii} = (1-a^2)\big(1 - 3a^2 + 2y^{(i)} a\big)$, כאשר $a=\tanh(z^{(i)})$, וההסיאן: $H_i = D_{ii}\,x^{(i)}(x^{(i)})^T$, $\;H = \dfrac{1}{m}X^TDX$.</p>
+
+<h2>מדוע אין קמירות גלובלית</h2>
+<p class="line">האיבר $(f')^2=(1-a^2)^2\ge 0$ תמיד חיובי (זה איבר Gauss-Newton, PSD). אבל האיבר $(a-y)f'' = -2a(1-a^2)(a-y)$ יכול להיות <b>שלילי</b>.</p>
+<p class="line">דוגמה: עבור $y=1$ מתקבל $1-3a^2+2a = (3a+1)(1-a)$, שהוא שלילי כאשר $a<-\tfrac13$ — כלומר כשהנוירון רווי בצד הלא נכון ($\tanh(z)<-\tfrac13$, חיזוי קרוב ל-$-1$ מול מטרה $+1$).</p>
+<div class="warn">כיוון ש-$D_{ii}$ מחליף סימן לפי מיקום $z$ — ההסיאן הוא הפרש של איברי דרגה-1 חיוביים ושליליים, ולכן <b>אינדפיניטי</b> באופן כללי. הפונקציה קמורה רק <b>מקומית</b> באזורי הביטחון, ולא קמורה גלובלית: קיימים מינימומים מקומיים, רמות-שיווי (plateaus) בזוני הרוויה, ונקודות אוכף.</div>
+<div class="box">זו בדיוק הסיבה ש-Gauss-Newton (שמשמיט את איבר השארית ומשאיר רק $(f')^2$) מייצב את האופטימיזציה — הוא מכריח PSD ומתעלם מהאיבר שהורס את הקמירות.</div>
+
+</body>
+</html>
