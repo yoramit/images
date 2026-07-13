@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>מטריצת הסיאן - רגרסיה לוגיסטית</title>
+<script>
+MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Arial", sans-serif;
+    font-size: 13px;
+    line-height: 1.25;
+    max-width: 900px;
+    margin: 10px auto;
+    padding: 0 10px;
+    color: #111;
+  }
+  h1 {
+    font-size: 15px;
+    margin: 6px 0 4px 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 2px;
+  }
+  h2 {
+    font-size: 13.5px;
+    margin: 6px 0 3px 0;
+    color: #333;
+  }
+  p, .line {
+    margin: 2px 0;
+    padding: 0;
+  }
+  .box {
+    background: #f4f6f8;
+    border-right: 3px solid #666;
+    padding: 3px 6px;
+    margin: 3px 0;
+  }
+  mjx-container {
+    margin: 0 !important;
+  }
+</style>
+</head>
+<body>
+
+<h1>מטריצת HESSIAN לפונקציית המטרה של Tanh</h1>
+
+<h2>פונקציית העלות</h2>
+<p class="line">פונקציית העלות הכוללת: $J(W) = \frac{1}{m}\sum_{i=1}^{m} \log\left(1 + e^{-y^{(i)} W^T x^{(i)}}\right)$, כאשר $z^{(i)} = W^T x^{(i)}$ הוא הפלט הגולמי, $y^{(i)} \in \{-1,+1\}$.</p>
+
+<h2>נגזרת ראשונה</h2>
+<p class="line">נגזרת ביחס לפלט הגולמי: $\dfrac{\partial L_i}{\partial z^{(i)}} = \dfrac{-y^{(i)}}{1+e^{y^{(i)}z^{(i)}}}$.</p>
+<p class="line">בכלל השרשרת, מכפילים בנגזרת $\dfrac{\partial z^{(i)}}{\partial W}=x^{(i)}$ ומקבלים גרדיאנט: $\nabla_W L_i = \dfrac{-y^{(i)}}{1+e^{y^{(i)}W^Tx^{(i)}}}\,x^{(i)}$.</p>
+
+<h2>נגזרת שנייה (הסיאן לדוגמה בודדת)</h2>
+<p class="line">גוזרים שוב ביחס ל-$W$ במכפלה חיצונית: $H_i = \nabla^2_W L_i = \dfrac{\partial}{\partial W}\!\left(\dfrac{-y^{(i)}}{1+e^{y^{(i)}W^Tx^{(i)}}}\right)(x^{(i)})^T$.</p>
+<p class="line">גזירת החלק הסקלרי לפי כלל השרשרת: $\dfrac{\partial}{\partial W}\big(-y^{(i)}(1+e^{y^{(i)}z^{(i)}})^{-1}\big) = -y^{(i)}(-1)(1+e^{y^{(i)}z^{(i)}})^{-2}e^{y^{(i)}z^{(i)}}y^{(i)}x^{(i)}$.</p>
+<p class="line">לאחר סידור: $H_i = (y^{(i)})^2\dfrac{e^{y^{(i)}z^{(i)}}}{(1+e^{y^{(i)}z^{(i)}})^2}x^{(i)}(x^{(i)})^T$.</p>
+<div class="box">מכיוון ש-$y^{(i)}\in\{-1,+1\}$ מתקיים $(y^{(i)})^2=1$ תמיד — התיוג נעלם מהנגזרת השנייה, והפונקציה סימטרית סביב האפס.</div>
+
+<h2>מרכיבי ההסיאן (סיגמויד)</h2>
+<p class="line">מסמנים $D_{ii} = \dfrac{e^{z^{(i)}}}{(1+e^{z^{(i)}})^2} = \sigma(z^{(i)})(1-\sigma(z^{(i)}))$ — שונות התחזית $p(1-p)$.</p>
+<p class="line">הסיאן לדוגמה בודדת: $H_i = D_{ii}\,x^{(i)}(x^{(i)})^T$.</p>
+<p class="line">הסיאן מלא (סכום על $m$ דוגמאות): $H = \dfrac{1}{m}\sum_{i=1}^{m} D_{ii}\,x^{(i)}(x^{(i)})^T$.</p>
+<p class="line">ייצוג וקטורי: $X$ בגודל $m\times n$, $D$ אלכסונית $m\times m$ עם איברים $D_{ii}$: $\;H = \dfrac{1}{m}X^TDX$.</p>
+<div class="box">מכיוון ש-$D_{ii}>0$ תמיד — ההסיאן Positive Semi-Definite, ולכן ה-Loss קמורה לחלוטין ומבטיחה מינימום גלובלי יחיד.</div>
+
+</body>
+</html>
