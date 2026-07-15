@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פתרון מתמטי - מורד הגרדיאנט</title>
+    <!-- הסרת polyfill.io לבקשתך ושימוש רק ב-MathJax -->
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['\\(', '\\)']]
+          }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 40px auto; max-width: 800px; padding: 20px; background-color: #f4f7f6; color: #2c3e50; }
+        h1 { color: #1abc9c; text-align: center; margin-bottom: 40px;}
+        h2 { border-bottom: 2px solid #1abc9c; padding-bottom: 8px; margin-top: 40px; color: #34495e; }
+        .math-block { overflow-x: auto; margin: 20px 0; font-size: 1.2em; text-align: center; direction: ltr;}
+        p, li { font-size: 1.15em; }
+        .container { background-color: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>פתרון מלא לשאלה - מורד הגרדיאנט</h1>
+        
+        <h2>סעיף א' - מציאת הגרדיאנט ונקודת הקיצון</h2>
+        <p>נתונה פונקציית העלות:</p>
+        <div class="math-block">$$ J(\mathbf{w}) = \mathbf{w}^T A \mathbf{w} + \mathbf{b}^T \mathbf{w} + \alpha $$</div>
+        
+        <p><strong>1. חישוב הגרדיאנט \(\nabla_{\mathbf{w}} J(\mathbf{w})\):</strong></p>
+        <p>נשתמש בכללי גזירה וקטורית לפי הווקטור \(\mathbf{w}\):</p>
+        <ul>
+            <li>הנגזרת של הביטוי הריבועי \(\mathbf{w}^T A \mathbf{w}\) היא \((A + A^T)\mathbf{w}\). מכיוון שנתון כי \(A\) היא מטריצה סימטרית (\(A = A^T\)), הביטוי שווה ל-\(2A\mathbf{w}\).</li>
+            <li>הנגזרת של הביטוי הליניארי \(\mathbf{b}^T \mathbf{w}\) היא \(\mathbf{b}\).</li>
+            <li>הנגזרת של הסקלר הקבוע \(\alpha\) היא אפס.</li>
+        </ul>
+        <p>נחבר את החלקים ונקבל את הגרדיאנט:</p>
+        <div class="math-block">$$ \nabla_{\mathbf{w}} J(\mathbf{w}) = 2A\mathbf{w} + \mathbf{b} $$</div>
+        
+        <p><strong>2. מציאת נקודת הקיצון \(\mathbf{w}^*\):</strong></p>
+        <p>כדי למצוא את נקודת המינימום, נשווה את הגרדיאנט לווקטור האפס ונחלץ את \(\mathbf{w}\):</p>
+        <div class="math-block">$$ 2A\mathbf{w}^* + \mathbf{b} = 0 \implies 2A\mathbf{w}^* = -\mathbf{b} $$</div>
+        <p>נתון כי המטריצה \(A\) מוגדרת חיובית (positive-definite), ולכן בהכרח כל הערכים העצמיים שלה חיוביים (שונים מאפס), מה שמבטיח שהיא מטריצה הפיכה. נכפול משמאל ב-\(A^{-1}\):</p>
+        <div class="math-block">$$ \mathbf{w}^* = -\frac{1}{2}A^{-1}\mathbf{b} $$</div>
+        
+        <h2>סעיף ב' - כלל העדכון בשיטת Gradient Descent</h2>
+        <p>שיטת אלגוריתם מורד הגרדיאנט (Gradient Descent) מתעדכנת על פי הכלל הבא, עבור גודל צעד \(\epsilon > 0\):</p>
+        <div class="math-block">$$ \mathbf{w}^{(k+1)} = \mathbf{w}^{(k)} - \epsilon \nabla_{\mathbf{w}} J(\mathbf{w}^{(k)}) $$</div>
+        <p>נציב את הגרדיאנט שחישבנו בסעיף א' אל תוך כלל העדכון, ונקבל:</p>
+        <div class="math-block">$$ \mathbf{w}^{(k+1)} = \mathbf{w}^{(k)} - \epsilon (2A\mathbf{w}^{(k)} + \mathbf{b}) $$</div>
+        
+        <h2>סעיף ג' - הבעת וקטור השגיאה באיטרציה הבאה</h2>
+        <p>מוגדר וקטור השגיאה באיטרציה ה-\(k\) כ- \(\mathbf{e}^{(k)} = \mathbf{w}^{(k)} - \mathbf{w}^*\). עלינו להביע את \(\mathbf{e}^{(k+1)}\) כפונקציה של \(\mathbf{e}^{(k)}\).</p>
+        <p>לפי ההגדרה:</p>
+        <div class="math-block">$$ \mathbf{e}^{(k+1)} = \mathbf{w}^{(k+1)} - \mathbf{w}^* $$</div>
+        <p>נציב את \(\mathbf{w}^{(k+1)}\) מתוך כלל העדכון שמצאנו בסעיף ב':</p>
+        <div class="math-block">$$ \mathbf{e}^{(k+1)} = \left[ \mathbf{w}^{(k)} - \epsilon (2A\mathbf{w}^{(k)} + \mathbf{b}) \right] - \mathbf{w}^* $$</div>
+        <p>כדי להיפטר מהווקטור \(\mathbf{b}\) ולקשר את הביטוי בחזרה לשגיאה, נשתמש בקשר שמצאנו בסעיף א' עבור נקודת הקיצון: \(2A\mathbf{w}^* + \mathbf{b} = 0\). מכאן נובע כי \(\mathbf{b} = -2A\mathbf{w}^*\). נציב זאת לתוך המשוואה שלנו:</p>
+        <div class="math-block">$$ \mathbf{e}^{(k+1)} = \mathbf{w}^{(k)} - \epsilon (2A\mathbf{w}^{(k)} - 2A\mathbf{w}^*) - \mathbf{w}^* $$</div>
+        <p>נסדר מחדש את האיברים ונוציא גורמים משותפים:</p>
+        <div class="math-block">$$ \mathbf{e}^{(k+1)} = (\mathbf{w}^{(k)} - \mathbf{w}^*) - 2\epsilon A (\mathbf{w}^{(k)} - \mathbf{w}^*) $$</div>
+        <p>מכיוון ש- \(\mathbf{e}^{(k)} = \mathbf{w}^{(k)} - \mathbf{w}^*\), נציב חזרה:</p>
+        <div class="math-block">$$ \mathbf{e}^{(k+1)} = \mathbf{e}^{(k)} - 2\epsilon A \mathbf{e}^{(k)} $$</div>
+        <p>נוציא את \(\mathbf{e}^{(k)}\) כגורם משותף מימין (כאשר \(I\) היא מטריצת היחידה בגודל \(d \times d\)):</p>
+        <div class="math-block">$$ \mathbf{e}^{(k+1)} = (I - 2\epsilon A)\mathbf{e}^{(k)} $$</div>
+        <p>לכן, המטריצה \(Q\) הדרושה היא:</p>
+        <div class="math-block">$$ Q = I - 2\epsilon A $$</div>
+        
+        <h2>סעיף ד' - הוכחת הקטנת נורמת השגיאה והתכנסות</h2>
+        <p>נתון לנו ש- \(0 < \epsilon < 1/\lambda_{max}\), כאשר \(\lambda_{max}\) הוא הערך העצמי המקסימלי של \(A\). עלינו להראות ש-\(\|\mathbf{e}^{(k+1)}\| < \|\mathbf{e}^{(k)}\|\).</p>
+        <p>מצאנו בסעיף ג' כי \(\mathbf{e}^{(k+1)} = Q\mathbf{e}^{(k)}\). לפי תכונות נורמה של מטריצות ווקטורים, מתקיים אי-השוויון הבא:</p>
+        <div class="math-block">$$ \|\mathbf{e}^{(k+1)}\| \leq \|Q\|_2 \|\mathbf{e}^{(k)}\| $$</div>
+        <p>כדי להוכיח שהשגיאה קטנה ממש (בהנחה ש-\(\mathbf{e}^{(k)} \neq 0\)), אנו צריכים להראות שהנורמה הספקטרלית (הערך העצמי המקסימלי בערכו המוחלט) של המטריצה \(Q\) קטנה מ-1.</p>
+        <p>נסמן את הערכים העצמיים של \(A\) ב-\(\lambda_i\). כיוון ש-\(A\) מוגדרת חיובית, כל הערכים העצמיים שלה חיוביים (\(\lambda_i > 0\)). לפיכך, הערכים העצמיים של המטריצה \(Q = I - 2\epsilon A\) הם מהצורה: \(1 - 2\epsilon \lambda_i\).</p>
+        <p>נבדוק את הגבולות של הערכים העצמיים האלו תחת התנאי \(0 < \epsilon < 1/\lambda_{max}\):</p>
+        <ol>
+            <li><strong>חסם עליון:</strong> כיוון ש-\(\epsilon > 0\) ו-\(\lambda_i > 0\), מתקיים \(2\epsilon \lambda_i > 0\), ולכן: <br><br>$$ 1 - 2\epsilon \lambda_i < 1 $$</li>
+            <br><li><strong>חסם תחתון:</strong> מכיוון ש-\(\lambda_i \leq \lambda_{max}\) והנתון אומר ש- \(\epsilon < 1/\lambda_{max}\) (כלומר \(\epsilon \lambda_{max} < 1\)), מתקיים: <br><br>$$ 2\epsilon \lambda_i \leq 2\epsilon \lambda_{max} < 2 $$ <br>ולכן נחסר 2 מ-1 ונקבל: <br><br>$$ 1 - 2\epsilon \lambda_i > 1 - 2 = -1 $$</li>
+        </ol>
+        <p>מכאן שעבור כל ערך עצמי של \(Q\), מתקיים \(-1 < 1 - 2\epsilon \lambda_i < 1\). כלומר, הערך המוחלט של כל הערכים העצמיים של \(Q\) קטן ממש מ-1. מכיוון ש-\(Q\) מטריצה סימטרית, הנורמה ה-2 שלה שווה לערך העצמי המקסימלי בערך מוחלט:</p>
+        <div class="math-block">$$ \|Q\|_2 < 1 $$</div>
+        <p>נציב חזרה לאי-השוויון של השגיאה ונקבל את מבוקשנו:</p>
+        <div class="math-block">$$ \|\mathbf{e}^{(k+1)}\| \leq \|Q\|_2 \|\mathbf{e}^{(k)}\| < \|\mathbf{e}^{(k)}\| $$</div>
+        <p>(עבור \(k = 0,1,2,\dots\))</p>
+        <p><strong>מסקנת התכנסות:</strong><br> מכיוון שבכל איטרציה נורמת השגיאה מוכפלת בקבוע חיובי שקטן ממש מ-1 (נורמת \(Q\)), הסדרה \(\|\mathbf{e}^{(k)}\|\) שואפת ל-0 ככל ש-\(k \to \infty\). משמעות הדבר היא שווקטור השגיאה מתאפס בגבול:</p>
+        <div class="math-block">$$ \lim_{k \to \infty} (\mathbf{w}^{(k)} - \mathbf{w}^*) = 0 $$</div>
+        <p>ולכן הווקטור \(\mathbf{w}^{(k)}\) מתכנס באופן מובטח לנקודת המינימום \(\mathbf{w}^*\).</p>
+    </div>
+</body>
+</html>
